@@ -58,7 +58,7 @@ few minutes:
 
 - [x] `collector/collector.py`: reads system metrics and saves them to
     SQLite.
-- [ ] `api/`: Flask API that reads the database and serves it as JSON.
+- [x] `api/`: Flask API that reads the database and serves it as JSON.
 - [ ] Tailscale Funnel to expose the API safely.
 - [ ] `dashboard/`: web page showing server status.
 - [ ] Alerts if the server goes down or overheats.
