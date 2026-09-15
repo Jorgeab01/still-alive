@@ -6,8 +6,7 @@
 **Live:** [still-alive.jorgeab.dev](https://still-alive.jorgeab.dev)
 
 Lightweight monitoring for a home server, however old it is. Tracks uptime,
-temperature, and resource usage over time, and can send an alert if the
-server goes down or overheats.
+temperature and resource usage over time.
 
 ## Why
 
@@ -65,6 +64,32 @@ To run the API:
 
 ```bash
 python api/app.py
+```
+
+The API runs as a systemd service, so it starts on
+boot and restarts itself if it ever dies:
+
+```ini
+# /etc/systemd/system/still-alive-api.service
+[Unit]
+Description=Still Alive Flask API
+After=network.target
+
+[Service]
+Type=simple
+User=<user>
+WorkingDirectory=/path/to/server-dashboard/api
+ExecStart=/path/to/server-dashboard/venv/bin/python app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now still-alive-api.service
 ```
 
 By default it only listens on the local network. To expose it publicly
