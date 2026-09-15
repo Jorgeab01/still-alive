@@ -1,0 +1,11 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Data & logs (machine-specific, not meant to be shared)
+*.db
+*.log
+
+# Environment variables / secrets
+.env
