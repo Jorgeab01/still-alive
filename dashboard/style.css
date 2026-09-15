@@ -55,6 +55,12 @@ h1 {
   color: var(--heading);
 }
 
+.header-links {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .github-link {
   display: inline-flex;
   align-items: center;
@@ -348,8 +354,18 @@ section {
   }
 
   .device-info {
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
     text-align: left;
+    margin-top: 2px;
+    margin-bottom: 20px;
+  }
+
+  .device-info span:not(:last-child)::after {
+    content: "\00b7";
+    margin: 0 8px;
+    color: var(--border-light);
   }
 
   .readouts {

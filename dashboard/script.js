@@ -140,8 +140,7 @@ async function loadUptime() {
 
     document.getElementById("uptimeFrom").textContent = days[0]?.date || "";
 
-    // Today is a partial day (compared against a smaller expected sample count),
-    // so it's excluded here to avoid skewing the average of full, completed days.
+    // Today isn't over yet, so it's excluded from the average
     const completedDays = days.length > 1 ? days.slice(0, -1) : days;
     const avgText = completedDays.length
       ? `${Math.round(completedDays.reduce((sum, d) => sum + d.uptime_percent, 0) / completedDays.length)}% avg`

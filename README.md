@@ -3,6 +3,8 @@
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.14-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
+**Live:** [still-alive.jorgeab.dev](https://still-alive.jorgeab.dev)
+
 Lightweight monitoring for a home server, however old it is. Tracks uptime,
 temperature, and resource usage over time, and can send an alert if the
 server goes down or overheats.
@@ -15,8 +17,7 @@ battery backup, and if it goes down while I am away, I have no way of
 knowing unless I check manually.
 
 still-alive collects basic health data every few minutes and keeps a
-history, so I can see how the server is actually doing over days and weeks,
-not just right now. It is built to work on any Linux machine, not just mine.
+history, so I can see how the server is actually doing over days and weeks. 
 
 ## How
 
@@ -28,7 +29,9 @@ A Flask API reads from that database and exposes the data over HTTP. It is
 exposed to the internet through Tailscale Funnel, so the dashboard can
 reach it from anywhere without opening any ports on the router.
 
-A small web dashboard then displays the data.
+A small web dashboard shows the current status, a 30-day uptime overview,
+and charts of temperature, CPU, and memory usage over the last 24
+hours.
 
 ## Stack
 
@@ -36,6 +39,8 @@ A small web dashboard then displays the data.
 - SQLite
 - Flask
 - Tailscale
+- Chart.js
+- HTML/CSS/JS (dashboard)
 
 ## Setup
 
@@ -52,8 +57,9 @@ few minutes:
 ```
 */5 * * * * /path/to/venv/bin/python /path/to/collector/collector.py
 ```
-The 5 means the interval between each reading. You can change it to collect more or less data over time.
 
+The `5` is the interval in minutes between each reading. You can change
+it to collect more or less data over time.
 
 To run the API:
 
@@ -77,5 +83,5 @@ This assumes Tailscale is already installed and set up on the machine.
     SQLite.
 - [x] `api/`: Flask API that reads the database and serves it as JSON.
 - [x] Tailscale Funnel to expose the API safely.
-- [ ] `dashboard/`: web page showing server status.
+- [x] `dashboard/`: web page showing server status.
 - [ ] Alerts if the server goes down or overheats.
