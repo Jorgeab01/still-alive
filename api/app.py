@@ -58,7 +58,10 @@ def history():
 @app.route("/api/uptime")
 def uptime():
     days = request.args.get("days", default=90, type=int)
-    since = (datetime.now(timezone.utc) - timedelta(days=days - 1)).date()
+    now = datetime.now(timezone.utc)
+    today = now.date()
+    # -1 so the range includes today, not just the (days-1) days before it
+    since = today - timedelta(days=days - 1)
 
     conn = get_db()
     rows = conn.execute(
@@ -72,12 +75,17 @@ def uptime():
         day = row["timestamp"][:10]
         counts[day] = counts.get(day, 0) + 1
 
+    minutes_elapsed_today = now.hour * 60 + now.minute
+    expected_today = max(1, minutes_elapsed_today / 5)
+
     result = []
     for i in range(days):
-        day = (since + timedelta(days=i)).isoformat()
-        count = counts.get(day, 0)
-        percent = min(100, round(count / SAMPLES_PER_DAY * 100))
-        result.append({"date": day, "uptime_percent": percent})
+        day = since + timedelta(days=i)
+        day_str = day.isoformat()
+        count = counts.get(day_str, 0)
+        expected = expected_today if day == today else SAMPLES_PER_DAY
+        percent = min(100, round(count / expected * 100))
+        result.append({"date": day_str, "uptime_percent": percent})
 
     return jsonify(result)
 

@@ -24,12 +24,11 @@ A small Python script runs on a schedule (cron) and reads CPU usage, RAM
 usage, disk usage, and temperature from the system. Each reading is saved
 to a local SQLite database with a timestamp.
 
-A Flask API reads from that database and exposes the data over HTTP. The
-API is only reachable through a private network (Tailscale), so nothing is
-exposed to the internet directly.
+A Flask API reads from that database and exposes the data over HTTP. It is
+exposed to the internet through Tailscale Funnel, so the dashboard can
+reach it from anywhere without opening any ports on the router.
 
-A small web dashboard then displays the data: current status, recent
-history as graphs, and a day by day uptime view.
+A small web dashboard then displays the data.
 
 ## Stack
 
@@ -53,12 +52,30 @@ few minutes:
 ```
 */5 * * * * /path/to/venv/bin/python /path/to/collector/collector.py
 ```
+The 5 means the interval between each reading. You can change it to collect more or less data over time.
+
+
+To run the API:
+
+```bash
+python api/app.py
+```
+
+By default it only listens on the local network. To expose it publicly
+(so the dashboard can reach it from anywhere), this project uses
+[Tailscale Funnel](https://tailscale.com/kb/1223/funnel):
+
+```bash
+sudo tailscale funnel --bg 5000
+```
+
+This assumes Tailscale is already installed and set up on the machine.
 
 ## Roadmap
 
 - [x] `collector/collector.py`: reads system metrics and saves them to
     SQLite.
 - [x] `api/`: Flask API that reads the database and serves it as JSON.
-- [ ] Tailscale Funnel to expose the API safely.
+- [x] Tailscale Funnel to expose the API safely.
 - [ ] `dashboard/`: web page showing server status.
 - [ ] Alerts if the server goes down or overheats.
